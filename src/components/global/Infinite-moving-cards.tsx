@@ -69,7 +69,6 @@ export const InfiniteMovingCards = ({
       }
     }
   }
-  console.log(items)
   return (
     <div className="flex justify-center">
       <div
