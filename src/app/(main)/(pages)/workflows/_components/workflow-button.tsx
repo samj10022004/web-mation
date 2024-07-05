@@ -1,5 +1,5 @@
 'use client'
-import Workflowform from '@/components/forms/workflow-form'
+import Workflowform from '@/components/forms/Workflow-form'
 import CustomModal from '@/components/global/Custom-modal'
 import { Button } from '@/components/ui/button'
 import { useBilling } from '@/providers/billing-provider'
