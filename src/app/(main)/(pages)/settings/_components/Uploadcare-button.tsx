@@ -1,65 +1,48 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import * as LR from '@uploadcare/blocks';
-import { useRouter } from 'next/navigation';
-import { FileUploaderRegular } from '@uploadcare/react-uploader';
-import '@uploadcare/react-uploader/core.css';
+'use client'
+import React, { useEffect, useRef } from 'react'
+import * as LR from '@uploadcare/blocks'
+import { useRouter } from 'next/navigation'
 
 type Props = {
-  onUpload: (url: string) => Promise<any>;
-};
+  onUpload: (e: string) => any
+}
 
-LR.registerBlocks(LR);
+LR.registerBlocks(LR)
 
-const UploadCareButton: React.FC<Props> = ({ onUpload }) => {
-  const router = useRouter();
-  const [files, setFiles] = useState<Array<{ uuid: string; cdnUrl: string; fileInfo: { originalFilename: string } }>>([]);
-  const uploaderRef = useRef<any>(null); // Adjust the type if possible
+const UploadCareButton = ({ onUpload }: Props) => {
+  const router = useRouter()
+  const ctxProviderRef = useRef<
+    typeof LR.UploadCtxProvider.prototype & LR.UploadCtxProvider
+  >(null)
 
   useEffect(() => {
-    const handleUpload = async (e: CustomEvent<{ cdnUrl: string }>) => {
-      const file = await onUpload(e.detail.cdnUrl);
+    const handleUpload = async (e: any) => {
+      const file = await onUpload(e.detail.cdnUrl)
       if (file) {
-        router.refresh();
+        router.refresh()
       }
-    };
-
-    const uploader = uploaderRef.current;
-
-    if (uploader) {
-      uploader.addCustomEventListener('file-upload-success', handleUpload as unknown as EventListener);
     }
-
-    return () => {
-      if (uploader) {
-        uploader.removeCustomEventListener('file-upload-success', handleUpload as unknown as EventListener);
-      }
-    };
-  }, [onUpload, router]);
-
-  const handleChangeEvent = (items: any) => {
-    // Adjust this function based on the actual structure provided by FileUploaderRegular
-    setFiles(items.allEntries.filter((entry: any) => entry.status === 'success').map((entry: any) => ({
-      uuid: entry.uuid,
-      cdnUrl: entry.cdnUrl,
-      fileInfo: {
-        originalFilename: entry.fileInfo.originalFilename,
-      },
-    })));
-  };
+    ctxProviderRef.current.addEventListener('file-upload-success', handleUpload)
+  }, [])
 
   return (
     <div>
-      <FileUploaderRegular ref={uploaderRef} onChange={handleChangeEvent} pubkey="d23461dc05c798249293" />
-      <div>
-        {files.map(file => (
-          <div key={file.uuid}>
-            <img src={file.cdnUrl} alt={file.fileInfo.originalFilename} />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
+      <lr-config
+        ctx-name="my-uploader"
+        pubkey="a9428ff5ff90ae7a64eb"
+      />
 
-export default UploadCareButton;
+      <lr-file-uploader-regular
+        ctx-name="my-uploader"
+        css-src={`https://cdn.jsdelivr.net/npm/@uploadcare/blocks@0.35.2/web/lr-file-uploader-regular.min.css`}
+      />
+
+      <lr-upload-ctx-provider
+        ctx-name="my-uploader"
+        ref={ctxProviderRef}
+      />
+    </div>
+  )
+}
+
+export default UploadCareButton
