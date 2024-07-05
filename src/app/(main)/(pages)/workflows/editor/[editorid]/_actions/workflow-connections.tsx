@@ -23,7 +23,6 @@ export const onCreateNodesEdges = async (
 }
 
 export const onFlowPublish = async (workflowId: string, state: boolean) => {
-  console.log(state)
   const published = await db.workflows.update({
     where: {
       id: workflowId,

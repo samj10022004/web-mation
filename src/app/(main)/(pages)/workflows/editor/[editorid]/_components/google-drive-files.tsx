@@ -15,19 +15,33 @@ const GoogleDriveFiles = (props: Props) => {
 
   const reqGoogle = async () => {
     setLoading(true)
-    const response = await axios.get('/api/drive-activity')
-    if (response) {
-      toast.message(response.data)
+    try {
+      const response = await axios.get('/api/drive-activity')
+      if (response.data) {
+        toast.message(response.data.message)
+        setIsListening(true)
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error('Axios error:', error.response?.data)
+        toast.error(`Request failed: ${error.response?.data?.message || error.message}`)
+      } else {
+        console.error('Unexpected error:', error)
+        toast.error('An unexpected error occurred')
+      }
+    } finally {
       setLoading(false)
-      setIsListening(true)
     }
-    setIsListening(false)
   }
 
   const onListener = async () => {
-    const listener = await getGoogleListener()
-    if (listener?.googleResourceId !== null) {
-      setIsListening(true)
+    try {
+      const listener = await getGoogleListener()
+      if (listener?.googleResourceId) {
+        setIsListening(true)
+      }
+    } catch (error) {
+      toast.error('Failed to get listener')
     }
   }
 
@@ -46,9 +60,7 @@ const GoogleDriveFiles = (props: Props) => {
       ) : (
         <Button
           variant="outline"
-          {...(!loading && {
-            onClick: reqGoogle,
-          })}
+          onClick={!loading ? reqGoogle : undefined}
         >
           {loading ? (
             <div className="absolute flex h-full w-full items-center justify-center">

@@ -53,10 +53,10 @@ const EditorCanvasSidebar = ({ nodes }: Props) => {
   }, [nodeConnection])
 
   return (
-    <aside>
+    <aside className="h-screen overflow-hidden">
       <Tabs
         defaultValue="actions"
-        className="h-screen overflow-scroll pb-24"
+        className="h-screen overflow-scroll pb-40 "
       >
         <TabsList className="bg-transparent">
           <TabsTrigger value="actions">Actions</TabsTrigger>
@@ -99,7 +99,6 @@ const EditorCanvasSidebar = ({ nodes }: Props) => {
           <div className="px-2 py-4 text-center text-xl font-bold">
             {state.editor.selectedNode.data.title}
           </div>
-
           <Accordion type="multiple">
             <AccordionItem
               value="Options"
