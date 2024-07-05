@@ -23,7 +23,7 @@ import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
-import { onCreateWorkflow } from '@/app/(main)/(pages)/workflows/_actions/workflow-Connections'
+import { onCreateWorkflow } from '@/app/(main)/(pages)/workflows/_actions/workflow-connections'
 
 import { useModal } from '@/providers/modal-provider'
 
